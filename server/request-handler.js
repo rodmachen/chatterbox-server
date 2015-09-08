@@ -15,20 +15,21 @@ var database = {
     {
       username: 'taylor',
       text: 'whatsup',
-      roomname: 'myRoom'
-    },      
+      roomname: 'myRoom',
+    },
     {
       username: 'rod',
       text: 'hey',
-      roomname: 'myRoom'
+      roomname: 'myRoom',
     },
     {
       username: 'stephan',
       text: 'what',
-      roomname: 'myRoom'
-    }
-  ]
+      roomname: 'myRoom',
+    },
+  ],
 };
+
 // *************************************************************
 
 exports.requestHandler = function(request, response) {
@@ -47,21 +48,21 @@ exports.requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   // console.log(request);
-  console.log("Serving request type " + request.method + " for url " + request.url);
+  console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
   // var stringified = JSON.stringify(database);
   // console.log(stringified);
 
   // The outgoing status.
 
-
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
+
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = 'text/plain';
 
   if (request.url !== '/classes/messages' && request.url !== '/classes/room1') {
     var statusCode = 404;
@@ -70,16 +71,18 @@ exports.requestHandler = function(request, response) {
   }
 
   if (request.method === 'OPTIONS') {
-    var statusCode = 200;
+    statusCode = 200;
     response.writeHead(statusCode, headers);
     response.end();
   }
 
   if (request.method === 'GET') {
-    var statusCode = 200;
+    statusCode = 200;
+
     // .writeHead() writes to the request line and headers of the response,
     // which includes the status and all headers.
     response.writeHead(statusCode, headers);
+
     // Make sure to always call response.end() - Node may not send
     // anything back to the client until you do. The string you pass to
     // response.end() will be the body of the response - i.e. what shows
@@ -94,21 +97,23 @@ exports.requestHandler = function(request, response) {
   if (request.method === 'POST') {
     // add message to database results array
     // database.results.push(JSON.stringify(request.data));
-    var item = "";
+    var item = '';
     var statusCode = 201;
     request.setEncoding('utf8');
     request.on('data', function(data) {
       item = item + data;
     });
+
     request.on('end', function() {
       database.results.unshift(JSON.parse(item));
       console.log(database.results[0].username);
       item = '';
+
       // .writeHead() writes to the request line and headers of the response,
       // which includes the status and all headers.
       response.writeHead(statusCode, headers);
-      response.end()
-    })
+      response.end();
+    });
   }
 };
 
@@ -122,10 +127,10 @@ exports.requestHandler = function(request, response) {
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
 var defaultCorsHeaders = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "access-control-allow-headers": "content-type, accept",
-  "access-control-max-age": 10 // Seconds.
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-headers': 'content-type, accept',
+  'access-control-max-age': 10, // Seconds.
 };
 
 // module.exports = requestHandler;
